@@ -77,6 +77,7 @@ async function init () {
     doc = rhino.File3dm.fromByteArray(new Uint8Array(buffer))
     console.log(doc)
 
+
     // we can use Rhino3dmLoader.parse() to load the model into three.js for visualisation without
     // having to download it again
     loader.parse( buffer, function ( object ) {
