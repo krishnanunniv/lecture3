@@ -9,17 +9,23 @@ const definitionName = 'Spiraltower.gh'
 
 // listen for slider change events
 const profile_slider = document.getElementById( 'profile' )
-profile_slider.addEventListener( 'input', onSliderChange, false )
+profile_slider.addEventListener( 'mouseup', onSliderChange, false )
 const rotation_slider = document.getElementById( 'rotation' )
-rotation_slider.addEventListener( 'input', onSliderChange, false )
+rotation_slider.addEventListener( 'mouseup', onSliderChange, false )
 
 
 const downloadButton = document.getElementById("downloadButton")
 downloadButton.onclick = download
 
+//default material?
+const material = new THREE.MeshNormalMaterial({ wireframe: true })
+
+
 // set up loader for converting the results to threejs
 const loader = new Rhino3dmLoader()
 loader.setLibraryPath( 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/' )
+
+
 
 // create a few variables to store a reference to the rhino3dm library and to the loaded definition
 let rhino, definition, doc
@@ -50,8 +56,8 @@ async function compute() {
     // collect data
 
     // get slider values
-    let rotation = document.getElementById('rotation').valueAsNumber
     let profile = document.getElementById('profile').valueAsNumber
+    let rotation = document.getElementById('rotation').valueAsNumber
 
     // format data
     let param1 = new RhinoCompute.Grasshopper.DataTree('RH_IN:profile')
@@ -162,11 +168,17 @@ let scene, camera, renderer
 
 function init() {
 
+    THREE.Object3D.DefaultUp = new THREE.Vector3( 0, 0, 1 )
+
+
+
     // create a scene and a camera
     scene = new THREE.Scene()
-    scene.background = new THREE.Color(1, 1, 1)
+    scene.background = new THREE.Color(0xC9C9C9)
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.z = - 30
+    camera.position.y = - 75
+    camera.position.z=100
+
 
     // create the renderer and add it to the html
     renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -178,11 +190,19 @@ function init() {
 
     // add a directional light
     const directionalLight = new THREE.DirectionalLight( 0xffffff )
-    directionalLight.intensity = 2
+    directionalLight.intensity = 1
     scene.add( directionalLight )
 
-    const ambientLight = new THREE.AmbientLight()
-    scene.add( ambientLight )
+
+
+    //Adding point lights
+    let light1 = new THREE.PointLight(0xFFFFFF,1,500)
+    light1.position.set(100,-100,100);
+    scene.add(light1);
+
+    let light = new THREE.PointLight(0xFFFFFF,1,500)
+    light.position.set(-100,-100,100);
+    scene.add(light);
 
 }
 
